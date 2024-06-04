@@ -1,0 +1,14 @@
+{
+  "NODE_ENV": "test",
+  "HOST": "127.0.0.1",
+  "PORT": "3000",
+  "DB_URL": "mongodb://localhost:27017/dummy-to-pass-validation",
+  "REDIS_URI": "redis://dummy:6379",
+  "SECRET_TOKEN": "random",
+  "DOMAIN": "autodex.xyz",
+  "HOST_URI": "https://autodex.xyz/profile",
+  "SOLSCAN_API_KEY": "test",
+  "SOLANA_CLUSTER": "https://solana-rpc.autodex.xyz/",
+  "MACHINE_PROGRAM_ADDRESS": "DL1BQwRmN4Ye4fsmDnPipNrm1XU24x8yDU7c5Ltsqvvc",
+  "OPERATOR_SECRET_KEY": "4TJYWMuorKRT8xGwZewgAH2gvY6WfEwK3SRbtRYrSS9wcx3CGUnbjT9p7vA9KznqRDeYBtXpMP8Krqr8xvdUGhnU"
+}
