@@ -74,7 +74,7 @@ import { MqModule } from './mq/mq.module';
           redis: {
             host: redis.host,
             port: Number(redis.port),
-            password: redis.password,
+            password: 'auto-dex-backend-password',
             keepAlive: 1,
             db: Number(redis.database || 0),
           },

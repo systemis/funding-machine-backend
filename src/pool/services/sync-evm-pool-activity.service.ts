@@ -31,6 +31,7 @@ export class SyncEvmPoolActivityService {
   ) {}
 
   private async updateEvent(events) {
+    console.log(`Updating ${events.length} event(s) ...`);
     const updates = events.map((event) => {
       return {
         updateOne: {
@@ -48,18 +49,14 @@ export class SyncEvmPoolActivityService {
     await this.poolActivityRepo.bulkWrite(updates);
   }
   async syncAllPoolActivities() {
+    console.log('SYNCING ALL POOL ACTIVITIES');
     const timer = new Timer('Sync All EVM Pools activities');
     timer.start();
 
     const data = await this.poolRepo.aggregate([
       {
         $match: {
-          $and: [
-            { chainId: { $ne: ChainID.Solana } },
-            { chainId: { $ne: ChainID.AptosTestnet } },
-            { chainId: { $ne: ChainID.AptosMainnet } },
-            { chainId: { $nin: StoppedChains } },
-          ],
+          $and: [{ chainId: { $eq: ChainID.AvaxC } }],
         },
       },
       {
@@ -71,6 +68,9 @@ export class SyncEvmPoolActivityService {
         },
       },
     ]);
+
+    console.log(data);
+    console.log(`Found ${data.length} pool(s) to sync ...`);
 
     await Promise.all(
       data.map(async ({ _id: chainId }) => {

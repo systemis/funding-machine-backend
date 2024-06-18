@@ -561,6 +561,8 @@ export class EVMIndexer {
       blockDiff,
     );
 
+    console.log('events length', data.length);
+
     return {
       data: (
         await Promise.all(

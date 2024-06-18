@@ -44,6 +44,15 @@ export class EVMBasedMachineProvider {
     /**
      * @dev Initializes rpc provider
      */
+    console.log({
+      RPC_URL,
+      INTERNAL_RPC_URL: RPC_URL,
+      OPERATOR_SECRET_KEY,
+      MACHINE_PROGRAM_ADDRESS,
+      MACHINE_REGISTRY_PROGRAM_ADDRESS,
+      MACHINE_VAULT_PROGRAM_ADDRESS,
+      MULTICALL3_PROGRAM_ADDRESS,
+    });
     this.rpcProvider = new ethers.providers.JsonRpcProvider(RPC_URL);
 
     /**
@@ -375,6 +384,8 @@ export class EVMBasedMachineProvider {
         ? fromBlock + blockDiff
         : currentBlock;
 
+    console.log(fromBlock, desiredMaxBlock);
+
     const expectedEvents = [
       'MachineUpdated',
       'MachineInitialized',
@@ -434,6 +445,11 @@ export class EVMBasedMachineProvider {
       }),
     );
 
+    console.log({
+      registryAddress: this.machineRegistry.address,
+      vaultAddress: this.machineVault.address,
+    });
+    console.log('Fetched logs', registryLogs.length, vaultLogs.length);
     return {
       data: registryLogs
         .concat(vaultLogs)

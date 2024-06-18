@@ -29,20 +29,11 @@ export class MachineProcessor {
   @Process(BUY_EVM_TOKEN_PROCESS)
   async buyEVMTokenJob() {
     try {
-      /**
-       * @dev Filter all proper pools
-       */
+      console.log('BUY_EVM_TOKEN');
       const pools = await this.poolRepo
         .find({
-          $and: [
-            { chainId: { $ne: ChainID.Solana } },
-            { chainId: { $ne: ChainID.AptosTestnet } },
-            { chainId: { $ne: ChainID.AptosMainnet } },
-          ],
+          chainId: ChainID.AvaxC,
           status: PoolStatus.ACTIVE,
-          /**
-           * @dev Date filtering
-           */
           nextExecutionAt: {
             $lte: new Date(),
           },
@@ -56,24 +47,19 @@ export class MachineProcessor {
         `[${BUY_EVM_TOKEN_PROCESS}] Found ${pools.length} machine(s) ready to swap ...`,
       );
 
-      /**
-       * @dev Execute jobs
-       */
       await Promise.all(
         pools.map((pool) => {
-          /**
-           * @dev Execute on EVM
-           */
+          console.log('Executing swap for pool', pool._id);
           return this.poolService
             .executeSwapTokenOnEVM(pool._id.toString(), pool.chainId)
             .then(() =>
               console.log(
-                `[${BUY_EVM_TOKEN_PROCESS}] Executed swap for ${pool.id}`,
+                `[${BUY_EVM_TOKEN_PROCESS}] Executed swap for ${pool._id}`,
               ),
             )
             .catch(() =>
               console.log(
-                `[${BUY_EVM_TOKEN_PROCESS}] Failed to execute swap for ${pool.id}`,
+                `[${BUY_EVM_TOKEN_PROCESS}] Failed to execute swap for ${pool._id}`,
               ),
             );
         }),
@@ -86,22 +72,12 @@ export class MachineProcessor {
   @Process(CLOSE_EVM_POSITION_PROCESS)
   async closeEVMPositions() {
     try {
-      /**
-       * @dev Filter all proper pools
-       */
       const pools = await this.poolRepo
         .find({
-          $and: [
-            { chainId: { $ne: ChainID.Solana } },
-            { chainId: { $ne: ChainID.AptosTestnet } },
-            { chainId: { $ne: ChainID.AptosMainnet } },
-          ],
+          chainId: ChainID.AvaxC,
           status: {
-            $ne: PoolStatus.ENDED,
+            $ne: PoolStatus.ACTIVE,
           },
-          /**
-           * @dev Date filtering
-           */
           currentTargetTokenBalance: {
             $gt: 0,
           },
@@ -112,17 +88,11 @@ export class MachineProcessor {
         .exec();
 
       console.log(
-        `[${CLOSE_EVM_POSITION_PROCESS}] Found ${pools.length} machine(s) ready to swap ...`,
+        `[${CLOSE_EVM_POSITION_PROCESS}] Found ${pools.length} machine(s) ready to swap for closing ...`,
       );
 
-      /**
-       * @dev Execute jobs
-       */
       await Promise.all(
         pools.map((pool) => {
-          /**
-           * @dev Execute on EVM
-           */
           return this.poolService
             .executeClosingPositionOnEVM(pool._id.toString(), pool.chainId)
             .then(() =>

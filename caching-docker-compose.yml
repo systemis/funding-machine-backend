@@ -1,0 +1,8 @@
+version: "3"
+services:
+  redis:
+    image: "redis:alpine"
+    container_name: auto-dex-backend-caching
+    ports:
+      - "6380:6379"
+    command: /bin/sh -c "redis-server --requirepass auto-dex-backend-password"
