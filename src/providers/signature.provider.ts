@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import Web3 from 'web3';
 
-interface Signer {
+export interface Signer {
   verify: (
     message: string,
     signedData: string,
