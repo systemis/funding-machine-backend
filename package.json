@@ -86,7 +86,7 @@
     "tweetnacl": "1.0.3",
     "typechain": "8.1.0",
     "uuid": "9.0.0",
-    "web3": "1.8.0"
+    "web3": "^4.10.0"
   },
   "devDependencies": {
     "@commitlint/cli": "17.4.3",

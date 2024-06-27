@@ -57,11 +57,12 @@ export class MachineProcessor {
                 `[${BUY_EVM_TOKEN_PROCESS}] Executed swap for ${pool._id}`,
               ),
             )
-            .catch(() =>
+            .catch((err) => {
+              console.log(err);
               console.log(
                 `[${BUY_EVM_TOKEN_PROCESS}] Failed to execute swap for ${pool._id}`,
-              ),
-            );
+              );
+            });
         }),
       );
     } catch (e) {
