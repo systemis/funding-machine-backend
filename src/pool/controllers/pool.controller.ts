@@ -17,6 +17,7 @@ import { PoolActivityService } from '../services/pool-activity.service';
 import { PoolMockService } from '../services/pool-mock.service';
 import { PoolService } from '../services/pool.service';
 import { CreateEmptyPoolDto } from '../dtos/create-empty-pool.dto';
+import { ChainID, PoolStatus } from '../entities/pool.entity';
 
 @Controller('pool')
 @ApiTags('pool')
@@ -81,21 +82,6 @@ export class PoolController {
     return this.poolActivityService.getPoolActivities(id);
   }
 
-  // @Post('/:id/sync')
-  // async syncOne(@Param('id') id: string) {
-  //   await this.syncPoolService.syncPoolById(id);
-  // }
-
-  // @Post('/user/:ownerAddress/sync')
-  // syncByOwnerAddress(@Param('ownerAddress') ownerAddress: string) {
-  //   return this.syncPoolService.syncPoolsByOwnerAddress(ownerAddress);
-  // }
-
-  // @Post('/:id/activity/sync')
-  // async syncPoolActivities(@Param('id') poolId: string) {
-  //   await this.syncPoolActivityService.syncPoolActivities(poolId);
-  // }
-
   @Get('/activity')
   async getPoolActivities(
     @Query() { limit, offset, search }: CommonQueryDto,
@@ -133,6 +119,37 @@ export class PoolController {
       },
       true,
     );
+  }
+
+  @Get('/user-activities')
+  async getUserActivities(@Query() { ownerAddress }: { ownerAddress: string }) {
+    const pools = await this.poolService.find({
+      ownerAddress,
+      chainId: ChainID.AvaxC,
+      limit: 50,
+      offset: 0,
+      statuses: [
+        PoolStatus.ACTIVE,
+        PoolStatus.CLOSED,
+        PoolStatus.ENDED,
+        PoolStatus.PAUSED,
+      ],
+    });
+
+    let activities = await Promise.all(
+      pools.map(
+        async (pool) =>
+          await this.poolActivityService.getPoolActivities((pool as any)._id),
+      ),
+    );
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    activities = activities.reduce((accum, activity) => {
+      return accum.concat(activity);
+    }, []);
+
+    return activities;
   }
 
   @Post('/mock/generate')

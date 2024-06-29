@@ -14,6 +14,7 @@ import { getRedisMemoryServerURI } from './mq/helper';
 import { WhitelistModule } from './whitelist/whitelist.module';
 import { OrmModule } from './orm/orm.module';
 import { MqModule } from './mq/mq.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -90,6 +91,7 @@ import { MqModule } from './mq/mq.module';
     PortfolioModule,
     OrmModule,
     MqModule,
+    NotificationModule,
   ],
 })
 export class WorkerModule {}

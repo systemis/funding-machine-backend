@@ -18,6 +18,7 @@ import { SyncStatusModel, SyncStatusSchema } from './model/sync-status.model';
 // import { ImportMantleCommand } from '@/orm/commands/import-mantle.command';
 // import { ImportScrollCommand } from '@/orm/commands/import-scroll.command';
 import { ImportAvaxcCommand } from './commands/import-avaxc.command';
+import { UserDeviceModel, UserDeviceSchema } from './model/user-device.model';
 
 @Module({
   // providers: [ImportMantleCommand, ImportScrollCommand],
@@ -38,6 +39,7 @@ import { ImportAvaxcCommand } from './commands/import-avaxc.command';
       { name: MarketModel.name, schema: MarketDataSchema },
       { name: StatisticsModel.name, schema: StatisticsSchema },
       { name: SyncStatusModel.name, schema: SyncStatusSchema },
+      { name: UserDeviceModel.name, schema: UserDeviceSchema },
     ]),
   ],
   exports: [

@@ -1,4 +1,12 @@
-import { Controller, Get, Optional, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Optional,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { CommonQueryDto } from '../../api-docs/dto/common-query.dto';
@@ -8,11 +16,15 @@ import {
 } from '../dtos/list-user-token.dto';
 import { PortfolioService } from '../services/portfolio.service';
 import { CacheLevel, CacheStorage } from '../../providers/cache.provider';
+import { NotificationService } from '@/notification/services/notification.service';
 
 @Controller('portfolio')
 @ApiTags('portfolio')
 export class PortfolioController {
-  constructor(private readonly portfolioService: PortfolioService) {}
+  constructor(
+    private readonly portfolioService: PortfolioService,
+    private readonly notificationService: NotificationService,
+  ) {}
 
   @Post('/:ownerAddress/portfolio/sync')
   async syncPortfolio(
@@ -51,5 +63,29 @@ export class PortfolioController {
     );
 
     return result;
+  }
+
+  @Post('/:ownerAddress/user-device')
+  async updateUserDevice(
+    @Param('ownerAddress') ownerAddress: string,
+    @Body('deviceToken') deviceToken: string,
+  ): Promise<void> {
+    return this.portfolioService.updateUserDeviceToken(
+      ownerAddress,
+      deviceToken,
+    );
+  }
+
+  @Post('/:ownerAddress/send-notification')
+  async sendNotificationToAddress(
+    @Param('ownerAddress') ownerAddress: string,
+    @Body('title') title: string,
+    @Body('body') body: string,
+  ): Promise<void> {
+    return this.notificationService.sendNotificationToAddress(
+      ownerAddress,
+      title,
+      body,
+    );
   }
 }

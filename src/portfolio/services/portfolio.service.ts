@@ -17,6 +17,10 @@ import {
   WhitelistDocument,
   WhitelistModel,
 } from '../../orm/model/whitelist.model';
+import {
+  UserDeviceDocument,
+  UserDeviceModel,
+} from '@/orm/model/user-device.model';
 
 export class PortfolioService {
   constructor(
@@ -26,6 +30,8 @@ export class PortfolioService {
     private readonly userTokenRepo: Model<UserTokenDocument>,
     @InjectModel(WhitelistModel.name)
     private readonly whitelistRepo: Model<WhitelistDocument>,
+    @InjectModel(UserDeviceModel.name)
+    private readonly userDeviceRepo: Model<UserDeviceDocument>,
   ) {}
 
   async syncUserPortfolio(ownerAddress: string) {
@@ -320,5 +326,19 @@ export class PortfolioService {
     });
 
     return this.poolRepo.aggregate(stages);
+  }
+
+  async updateUserDeviceToken(ownerAddress: string, deviceToken: string) {
+    const existingRecord = await this.userDeviceRepo.findOne({
+      ownerAddress,
+      deviceToken,
+    });
+
+    if (!existingRecord) {
+      await this.userDeviceRepo.create({
+        ownerAddress,
+        deviceToken,
+      });
+    }
   }
 }

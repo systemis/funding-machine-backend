@@ -14,6 +14,7 @@ import { WhitelistModule } from './whitelist/whitelist.module';
 import { OrmModule } from './orm/orm.module';
 import { StatisticsModule } from './statistics/statistics.module';
 import { AuthModule } from './auth/auth.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { AuthModule } from './auth/auth.module';
     WhitelistModule,
     StatisticsModule,
     AuthModule,
+    NotificationModule,
   ],
   /**
    * @dev Import controller.
