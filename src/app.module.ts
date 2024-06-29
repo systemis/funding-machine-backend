@@ -13,6 +13,7 @@ import { PortfolioModule } from './portfolio/portfolio.module';
 import { WhitelistModule } from './whitelist/whitelist.module';
 import { OrmModule } from './orm/orm.module';
 import { StatisticsModule } from './statistics/statistics.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { StatisticsModule } from './statistics/statistics.module';
     OrmModule,
     WhitelistModule,
     StatisticsModule,
+    NotificationModule,
   ],
   /**
    * @dev Import controller.

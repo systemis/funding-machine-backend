@@ -4,6 +4,7 @@ require('console-stamp')(console);
  * @dev Import core modules.
  */
 import { NestFactory } from '@nestjs/core';
+import * as firebaseAdmin from 'firebase-admin';
 import { ForbiddenException, ValidationPipe } from '@nestjs/common';
 
 /**
@@ -192,6 +193,19 @@ async function bootstrap() {
    */
   const app = await createMainAppHandler(AppModule, adapter);
   await globalApply(app);
+
+  /**
+   * @dev Initialize Firebase
+   * export FIREBASE_CONFIG=$(cat path/to/serviceAccountKey.json | base64)
+   * echo $FIREBASE_CONFIG
+   */
+  const serviceAccount = JSON.parse(
+    Buffer.from(process.env.FIREBASE_CONFIG, 'base64').toString('ascii'),
+  );
+
+  firebaseAdmin.initializeApp({
+    credential: firebaseAdmin.credential.cert(serviceAccount),
+  });
 
   /**
    * @dev Handle swagger stuffs.
