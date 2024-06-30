@@ -14,11 +14,13 @@ import { ChainID, PoolStatus } from '@/pool/entities/pool.entity';
 import { PoolDocument, PoolModel } from '@/orm/model/pool.model';
 import { MarketModel } from '@/orm/model/market.model';
 import { SyncEvmPoolService } from '@/pool/services/sync-evm-pool.service';
+import { NotificationService } from '@/notification/services/notification.service';
 
 @Processor(POOL_QUEUE)
 export class MachineProcessor {
   constructor(
     private readonly poolService: PoolService,
+    private readonly notificationService: NotificationService,
     private readonly evmSyncService: SyncEvmPoolService,
     @InjectModel(PoolModel.name)
     private readonly poolRepo: Model<PoolDocument>,
@@ -30,6 +32,10 @@ export class MachineProcessor {
   async buyEVMTokenJob() {
     try {
       console.log('BUY_EVM_TOKEN');
+      const notifcationContent = {
+        title: 'Token Swap Completed!',
+        body: 'Check your portfolio for updated balances and performance details.',
+      };
       const pools = await this.poolRepo
         .find({
           chainId: ChainID.AvaxC,
@@ -50,6 +56,11 @@ export class MachineProcessor {
       await Promise.all(
         pools.map((pool) => {
           console.log('Executing swap for pool', pool._id);
+          this.notificationService.sendNotificationToAddress(
+            pool.ownerAddress,
+            notifcationContent.title,
+            notifcationContent.body,
+          );
           return this.poolService
             .executeSwapTokenOnEVM(pool._id.toString(), pool.chainId)
             .then(() =>
