@@ -92,6 +92,24 @@ export class SystemConfig {
   @IsObject()
   NETWORKS: object;
 
+  @IsString()
+  SMTP_EMAIL_HOST: string;
+
+  @IsPort()
+  SMTP_EMAIL_PORT: string;
+
+  @IsString()
+  SMTP_EMAIL_USERNAME: string;
+
+  @IsString()
+  SMTP_EMAIL_PASSWORD: string;
+
+  @IsString()
+  SMTP_EMAIL_FROM_EMAIL: string;
+
+  @IsString()
+  SMTP_EMAIL_FROM_EMAIL_NAME: string;
+
   /**
    * @dev Validate schema.
    */
