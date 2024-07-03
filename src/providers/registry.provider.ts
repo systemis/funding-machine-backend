@@ -95,7 +95,7 @@ export class SystemConfig {
   @IsString()
   SMTP_EMAIL_HOST: string;
 
-  @IsPort()
+  @IsNotEmpty()
   SMTP_EMAIL_PORT: string;
 
   @IsString()

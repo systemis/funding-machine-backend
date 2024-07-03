@@ -124,7 +124,7 @@ export class PoolController {
   @Get('/user-activities')
   async getUserActivities(@Query() { ownerAddress }: { ownerAddress: string }) {
     const pools = await this.poolService.find({
-      ownerAddress,
+      ownerAddress: ownerAddress,
       chainId: ChainID.AvaxC,
       limit: 50,
       offset: 0,
@@ -136,7 +136,7 @@ export class PoolController {
       ],
     });
 
-    let activities = await Promise.all(
+    const activities = await Promise.all(
       pools.map(
         async (pool) =>
           await this.poolActivityService.getPoolActivities((pool as any)._id),
@@ -145,11 +145,9 @@ export class PoolController {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    activities = activities.reduce((accum, activity) => {
+    return activities.reduce((accum, activity) => {
       return accum.concat(activity);
     }, []);
-
-    return activities;
   }
 
   @Post('/mock/generate')
