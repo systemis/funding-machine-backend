@@ -137,10 +137,20 @@ export class PoolController {
     });
 
     const activities = await Promise.all(
-      pools.map(
-        async (pool) =>
-          await this.poolActivityService.getPoolActivities((pool as any)._id),
-      ),
+      pools.map(async (pool) => {
+        const t = await this.poolActivityService.getPoolActivities(
+          (pool as any)._id,
+        );
+
+        // Aggregate pool to activities
+        return t.map((item) => {
+          const tt = item as PoolActivityEntity;
+          return {
+            pool: pool,
+            ...tt,
+          };
+        });
+      }),
     );
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

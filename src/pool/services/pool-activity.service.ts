@@ -166,16 +166,19 @@ export class PoolActivityService {
    * @param poolId
    */
   async getPoolActivities(poolId: string) {
-    return this.poolActivityRepo.find(
-      {
-        poolId: new mongoose.Types.ObjectId(poolId),
-      },
-      {},
-      {
-        sort: {
-          createdAt: -1,
+    return this.poolActivityRepo
+      .find(
+        {
+          poolId: new mongoose.Types.ObjectId(poolId),
         },
-      },
-    );
+        {},
+        {
+          sort: {
+            createdAt: -1,
+          },
+        },
+      )
+      .lean()
+      .exec();
   }
 }
