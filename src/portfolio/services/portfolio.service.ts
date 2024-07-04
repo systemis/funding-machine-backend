@@ -389,6 +389,7 @@ export class PortfolioService {
    * - TypeError
    * */
   async checkUserDeviceToken(ownerAddress: string, deviceToken: string) {
+    console.log({ ownerAddress, deviceToken });
     return this.userDeviceRepo.findOne({
       ownerAddress,
       deviceToken,

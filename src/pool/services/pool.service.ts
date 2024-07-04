@@ -151,6 +151,30 @@ export class PoolService {
           },
         });
         break;
+
+      case FindPoolSortOption.TARGET_TOKEN_AMOUNT_DESC:
+      case FindPoolSortOption.TARGET_TOKEN_AMOUNT_ASC:
+        /** Sort target token amount stage */
+        stages.push({
+          $sort: {
+            currentReceivedTargetToken:
+              sortBy === FindPoolSortOption.TARGET_TOKEN_AMOUNT_DESC ? -1 : 1,
+          },
+        });
+        break;
+
+      case FindPoolSortOption.CURRENT_SPENT_BASE_TOKEN_AMOUNT_DESC:
+      case FindPoolSortOption.CURRENT_SPENT_BASE_TOKEN_AMOUNT_ASC:
+        /** Sort current spent base token amount stage */
+        stages.push({
+          $sort: {
+            currentSpentBaseToken:
+              sortBy === FindPoolSortOption.CURRENT_SPENT_BASE_TOKEN_AMOUNT_DESC
+                ? -1
+                : 1,
+          },
+        });
+        break;
     }
 
     /** Paginate stage */
