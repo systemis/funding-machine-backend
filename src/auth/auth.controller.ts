@@ -1,4 +1,18 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
+import { AuthService } from './auth.service';
 
 @Controller('auth')
-export class AuthController {}
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
+  @Post('/challenge')
+  async createChallenge(
+    @Body() createChallengeDto: { walletAddress: string; challenge: string },
+  ) {
+    // Create challenge
+    return this.authService.create(
+      createChallengeDto.walletAddress,
+      createChallengeDto.challenge,
+    );
+  }
+}
