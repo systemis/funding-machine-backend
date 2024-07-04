@@ -12,6 +12,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { CommonQueryDto } from '../../api-docs/dto/common-query.dto';
 import {
   ListUserTokenDto,
+  RegisterUserDeviceDto,
   UserTokenWithAdditionView,
 } from '../dtos/list-user-token.dto';
 import { PortfolioService } from '../services/portfolio.service';
@@ -65,15 +66,28 @@ export class PortfolioController {
     return result;
   }
 
-  @Post('/:ownerAddress/user-device')
-  async updateUserDevice(
+  @Post('/:ownerAddress/user-device/check')
+  async checkUserDeviceToken(
     @Param('ownerAddress') ownerAddress: string,
-    @Body('deviceToken') deviceToken: string,
-  ): Promise<void> {
-    return this.portfolioService.updateUserDeviceToken(
+    @Body() { deviceToken }: { deviceToken: string },
+  ) {
+    return this.portfolioService.checkUserDeviceToken(
       ownerAddress,
       deviceToken,
     );
+  }
+
+  @Post('/:ownerAddress/user-device')
+  async updateUserDevice(
+    @Param('ownerAddress') ownerAddress: string,
+    @Body() registerUserDeviceDto: RegisterUserDeviceDto,
+  ): Promise<void> {
+    return this.portfolioService.updateUserDeviceToken({
+      ownerAddress,
+      signature: registerUserDeviceDto.signature,
+      deviceToken: registerUserDeviceDto.deviceToken,
+      authChallengeId: registerUserDeviceDto.authChallengeId,
+    });
   }
 
   @Post('/:ownerAddress/send-notification')

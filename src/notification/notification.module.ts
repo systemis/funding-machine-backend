@@ -5,8 +5,8 @@ import { OrmModule } from '@/orm/orm.module';
 
 @Module({
   imports: [OrmModule],
+  exports: [NotificationService],
   providers: [NotificationService],
   controllers: [NotificationController],
-  exports: [NotificationService],
 })
 export class NotificationModule {}

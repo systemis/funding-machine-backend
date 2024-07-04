@@ -33,6 +33,7 @@ class EVMSigner implements Signer {
   verify(message: string, signedData: string, walletAddress): boolean {
     const web3 = new Web3();
     const address = web3.eth.accounts.recover(message, signedData, false);
+    console.log('address when verifying signature: ', address);
     return address === walletAddress;
   }
 }

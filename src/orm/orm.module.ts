@@ -10,18 +10,16 @@ import {
   TokenMetadataModel,
   TokenMetadataSchema,
 } from './model/token-metadata.model';
-import { UserTokenModel, UserTokenSchema } from './model/user-token.model';
-import { WhitelistModel, WhitelistSchema } from './model/whitelist.model';
 import { MarketDataSchema, MarketModel } from './model/market.model';
+import { ImportAvaxcCommand } from './commands/import-avaxc.command';
+import { WhitelistModel, WhitelistSchema } from './model/whitelist.model';
+import { UserTokenModel, UserTokenSchema } from './model/user-token.model';
 import { StatisticsModel, StatisticsSchema } from './model/statistic.model';
 import { SyncStatusModel, SyncStatusSchema } from './model/sync-status.model';
-// import { ImportMantleCommand } from '@/orm/commands/import-mantle.command';
-// import { ImportScrollCommand } from '@/orm/commands/import-scroll.command';
-import { ImportAvaxcCommand } from './commands/import-avaxc.command';
 import { UserDeviceModel, UserDeviceSchema } from './model/user-device.model';
+import { AuthChallengeModel, AuthChallengeSchema } from './model/auth.model';
 
 @Module({
-  // providers: [ImportMantleCommand, ImportScrollCommand],
   providers: [ImportAvaxcCommand],
   /**
    * @dev Declare models for the system to inject.
@@ -31,15 +29,16 @@ import { UserDeviceModel, UserDeviceSchema } from './model/user-device.model';
      * @dev Use forFeature to declare models.
      */
     MongooseModule.forFeature([
-      { name: TokenMetadataModel.name, schema: TokenMetadataSchema },
-      { name: WhitelistModel.name, schema: WhitelistSchema },
       { name: PoolModel.name, schema: PoolSchema },
-      { name: PoolActivityModel.name, schema: PoolActivitySchema },
-      { name: UserTokenModel.name, schema: UserTokenSchema },
       { name: MarketModel.name, schema: MarketDataSchema },
+      { name: WhitelistModel.name, schema: WhitelistSchema },
+      { name: UserTokenModel.name, schema: UserTokenSchema },
       { name: StatisticsModel.name, schema: StatisticsSchema },
       { name: SyncStatusModel.name, schema: SyncStatusSchema },
       { name: UserDeviceModel.name, schema: UserDeviceSchema },
+      { name: PoolActivityModel.name, schema: PoolActivitySchema },
+      { name: AuthChallengeModel.name, schema: AuthChallengeSchema },
+      { name: TokenMetadataModel.name, schema: TokenMetadataSchema },
     ]),
   ],
   exports: [

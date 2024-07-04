@@ -21,6 +21,9 @@ import {
   UserDeviceDocument,
   UserDeviceModel,
 } from '@/orm/model/user-device.model';
+import { AuthChallengeEntity } from '@/auth/entities/auth.entity';
+import { SignatureService } from '@/providers/signature.provider';
+import { UnauthorizedException } from '@nestjs/common';
 
 export class PortfolioService {
   constructor(
@@ -32,6 +35,11 @@ export class PortfolioService {
     private readonly whitelistRepo: Model<WhitelistDocument>,
     @InjectModel(UserDeviceModel.name)
     private readonly userDeviceRepo: Model<UserDeviceDocument>,
+    @InjectModel(AuthChallengeEntity.name)
+    private readonly authChallengeRepo: Model<AuthChallengeEntity>,
+
+    // @dev Inject signature service
+    private signatureService: SignatureService,
   ) {}
 
   async syncUserPortfolio(ownerAddress: string) {
@@ -328,17 +336,59 @@ export class PortfolioService {
     return this.poolRepo.aggregate(stages);
   }
 
-  async updateUserDeviceToken(ownerAddress: string, deviceToken: string) {
+  /**
+   * This function is used to update user device token
+   *  - Validate the signature
+   * - Check if the record already exists
+   * @param data
+   */
+  async updateUserDeviceToken(data: {
+    signature: string;
+    authChallengeId: string;
+    ownerAddress: string;
+    deviceToken: string;
+  }) {
+    const authChallenge = await this.authChallengeRepo.findById(
+      data.authChallengeId,
+    );
+
+    const signer = this.signatureService.getSigner();
+    const isValidSignature = signer.verify(
+      authChallenge.challenge,
+      data.signature,
+      data.ownerAddress,
+    );
+
+    if (!isValidSignature) throw new UnauthorizedException('Invalid signature');
+
     const existingRecord = await this.userDeviceRepo.findOne({
-      ownerAddress,
-      deviceToken,
+      ownerAddress: data.ownerAddress,
+      deviceToken: data.deviceToken,
     });
 
     if (!existingRecord) {
       await this.userDeviceRepo.create({
-        ownerAddress,
-        deviceToken,
+        ownerAddress: data.ownerAddress,
+        deviceToken: data.deviceToken,
       });
     }
+  }
+
+  /**
+   * This function is used to check if a user device token exists
+   * @param ownerAddress
+   * @param deviceToken
+   * @returns
+   * - UserDeviceDocument
+   * - null
+   * @throws
+   * - Error
+   * - TypeError
+   * */
+  async checkUserDeviceToken(ownerAddress: string, deviceToken: string) {
+    return this.userDeviceRepo.findOne({
+      ownerAddress,
+      deviceToken,
+    });
   }
 }

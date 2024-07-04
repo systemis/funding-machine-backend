@@ -1,6 +1,6 @@
 export class AuthChallengeEntity {
   challenge: string;
-  resolved: boolean;
+  isResolved: boolean;
   walletAddress: string;
 }
 
