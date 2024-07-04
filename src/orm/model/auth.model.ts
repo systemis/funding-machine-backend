@@ -17,6 +17,8 @@ export class AuthModel extends BaseModel implements AuthEntity {
   email: string;
 }
 
+@Injectable()
+@Schema({ collection: 'auth-challenge', timestamps: true, autoIndex: true })
 export class AuthChallengeModel
   extends BaseModel
   implements AuthChallengeEntity

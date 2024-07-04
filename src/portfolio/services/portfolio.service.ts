@@ -355,6 +355,10 @@ export class PortfolioService {
       data.authChallengeId,
     );
 
+    if (authChallenge.isResolved) {
+      throw new UnauthorizedException('Challenge is already resolved');
+    }
+
     const signer = this.signatureService.getSigner();
     const isValidSignature = signer.verify(
       authChallenge.challenge,
@@ -375,6 +379,10 @@ export class PortfolioService {
         deviceToken: data.deviceToken,
       });
     }
+
+    // solve the challenge
+    authChallenge.isResolved = true;
+    await authChallenge.save();
   }
 
   /**

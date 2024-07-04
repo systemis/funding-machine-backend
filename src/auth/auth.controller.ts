@@ -10,7 +10,7 @@ export class AuthController {
     @Body() createChallengeDto: { walletAddress: string; challenge: string },
   ) {
     // Create challenge
-    return this.authService.create(
+    return await this.authService.create(
       createChallengeDto.walletAddress,
       createChallengeDto.challenge,
     );
