@@ -11,6 +11,7 @@ import { SyncEvmPoolActivityService } from './services/sync-evm-pool-activity.se
 import { SyncEvmPoolService } from './services/sync-evm-pool.service';
 import { EVMPoolController } from './controllers/evm-pool.controller';
 import { FixDecimalsEventData } from './commands/fix-decimals-event-data';
+import { SignatureService } from '@/providers/signature.provider';
 
 @Module({
   imports: [OrmModule],
@@ -22,6 +23,7 @@ import { FixDecimalsEventData } from './commands/fix-decimals-event-data';
     PortfolioService,
     SyncEvmPoolActivityService,
     SyncEvmPoolService,
+    SignatureService,
 
     /**
      * Import commands

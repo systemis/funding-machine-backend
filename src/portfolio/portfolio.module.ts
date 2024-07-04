@@ -8,7 +8,7 @@ import { SignatureService } from '@/providers/signature.provider';
 
 @Module({
   imports: [OrmModule, NotificationModule],
-  providers: [SignatureService, PortfolioService],
   controllers: [PortfolioController],
+  providers: [SignatureService, PortfolioService],
 })
 export class PortfolioModule {}

@@ -21,9 +21,12 @@ import {
   UserDeviceDocument,
   UserDeviceModel,
 } from '@/orm/model/user-device.model';
-import { AuthChallengeEntity } from '@/auth/entities/auth.entity';
 import { SignatureService } from '@/providers/signature.provider';
 import { UnauthorizedException } from '@nestjs/common';
+import {
+  AuthChallengeDocument,
+  AuthChallengeModel,
+} from '@/orm/model/auth.model';
 
 export class PortfolioService {
   constructor(
@@ -35,8 +38,8 @@ export class PortfolioService {
     private readonly whitelistRepo: Model<WhitelistDocument>,
     @InjectModel(UserDeviceModel.name)
     private readonly userDeviceRepo: Model<UserDeviceDocument>,
-    @InjectModel(AuthChallengeEntity.name)
-    private readonly authChallengeRepo: Model<AuthChallengeEntity>,
+    @InjectModel(AuthChallengeModel.name)
+    private readonly authChallengeRepo: Model<AuthChallengeDocument>,
 
     // @dev Inject signature service
     private signatureService: SignatureService,
